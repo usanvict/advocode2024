@@ -1,7 +1,5 @@
 import * as fsPromise from "node:fs/promises";
 
-let step = 0;
-
 async function uploadInputForPartOne(fileName: string, blinkNumber: number) {
 	const file = await fsPromise.open(fileName, "r");
 	for await (const line of file.readLines()) {
@@ -12,24 +10,26 @@ async function uploadInputForPartOne(fileName: string, blinkNumber: number) {
 			result = blink(result); // Pass the result back to the function
 		}
 
-		console.log(`The result is ${result}`);
+		console.log(`The result is ${result.length}`);
 	}
 }
 
 function blink(numberArray: string[]) {
 	const newNumberArray: number[] = [];
+	let step = 0;
+
 	for (const element of numberArray) {
-		const separatedNumber = element.split("");
+		const separatedNumber = Array.from(element);
 		if (Number.parseInt(separatedNumber.join()) === 0) {
 			newNumberArray[step] = 1;
 			step += 1;
 		} else if (separatedNumber.length % 2 === 0) {
 			const halfLength = separatedNumber.length / 2;
-			const firstStoneString = separatedNumber.slice(0, halfLength);
+			const firstStone = separatedNumber.slice(0, halfLength).join("");
 			const secondStoneString = separatedNumber.slice(halfLength);
 
 			//assign the first stone
-			newNumberArray[step] = Number(firstStoneString.join(""));
+			newNumberArray[step] = Number(firstStone);
 
 			//check the second stone for zeros
 			const firstNonZeroIndex = secondStoneString.findIndex(
@@ -52,4 +52,4 @@ function blink(numberArray: string[]) {
 	return result;
 }
 
-await uploadInputForPartOne("day11-input-test.txt", 2);
+await uploadInputForPartOne("day11-input-test.txt", 75);
